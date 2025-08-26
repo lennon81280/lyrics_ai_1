@@ -10,4 +10,10 @@ Run the script and follow prompts for song title and artist:
 python lyrics_fetcher.py
 ```
 
-The script will display the lyrics if available.
+To avoid prompts, pass the title and artist as arguments:
+
+```bash
+python lyrics_fetcher.py "Mother" "Pink Floyd"
+```
+
+The script prints only the lyrics, with extra blank lines removed.

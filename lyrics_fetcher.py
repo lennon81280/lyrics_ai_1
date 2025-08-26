@@ -1,4 +1,5 @@
 from typing import Optional
+import argparse
 import json
 import urllib.request
 import urllib.error
@@ -30,14 +31,32 @@ def get_lyrics(title: str, artist: str, timeout: int = 10) -> Optional[str]:
         pass
     return None
 
+def clean_lyrics(text: str) -> str:
+    """Return lyrics stripped of surrounding whitespace and extra blank lines."""
+    lines = [line.rstrip() for line in text.splitlines()]
+    cleaned: list[str] = []
+    previous_blank = False
+    for line in lines:
+        is_blank = line == ""
+        if is_blank and previous_blank:
+            continue
+        cleaned.append(line)
+        previous_blank = is_blank
+    return "\n".join(cleaned).strip()
+
 
 def main() -> None:
-    title = input("Song title: ").strip()
-    artist = input("Artist: ").strip()
+    parser = argparse.ArgumentParser(description="Fetch song lyrics")
+    parser.add_argument("title", nargs="?", help="Song title")
+    parser.add_argument("artist", nargs="?", help="Song artist")
+    args = parser.parse_args()
+
+    title = args.title or input("Song title: ").strip()
+    artist = args.artist or input("Artist: ").strip()
+
     lyrics = get_lyrics(title, artist)
     if lyrics:
-        print("\n===== Lyrics =====\n")
-        print(lyrics)
+        print(clean_lyrics(lyrics))
     else:
         print("Lyrics not found or service unavailable.")
 
