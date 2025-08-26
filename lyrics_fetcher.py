@@ -26,7 +26,7 @@ def get_lyrics(title: str, artist: str, timeout: int = 10) -> Optional[str]:
             if resp.status == 200:
                 data = json.loads(resp.read().decode())
                 return data.get("lyrics")
-    except urllib.error.URLError:
+    except (urllib.error.URLError, TimeoutError):
         pass
     return None
 
