@@ -32,7 +32,6 @@ def get_lyrics(title: str, artist: str, timeout: int = 10) -> Optional[str]:
         pass
     return None
 
-
 def clean_lyrics(text: str) -> str:
     """Return lyrics stripped of surrounding whitespace and extra blank lines."""
     lines = [line.rstrip() for line in text.splitlines()]
