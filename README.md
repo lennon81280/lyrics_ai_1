@@ -17,3 +17,4 @@ python lyrics_fetcher.py "Mother" "Pink Floyd"
 ```
 
 The script prints only the lyrics, with extra blank lines removed.
+Input prompts are written to stderr so that redirecting stdout captures just the lyrics.

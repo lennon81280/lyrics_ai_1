@@ -1,6 +1,7 @@
 from typing import Optional
 import argparse
 import json
+import sys
 import urllib.request
 import urllib.error
 import urllib.parse
@@ -51,8 +52,17 @@ def main() -> None:
     parser.add_argument("artist", nargs="?", help="Song artist")
     args = parser.parse_args()
 
-    title = args.title or input("Song title: ").strip()
-    artist = args.artist or input("Artist: ").strip()
+    if args.title:
+        title = args.title
+    else:
+        print("Song title: ", end="", file=sys.stderr)
+        title = input().strip()
+
+    if args.artist:
+        artist = args.artist
+    else:
+        print("Artist: ", end="", file=sys.stderr)
+        artist = input().strip()
 
     lyrics = get_lyrics(title, artist)
     if lyrics:
