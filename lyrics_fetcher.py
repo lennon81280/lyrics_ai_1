@@ -10,7 +10,6 @@ import urllib.parse
 
 API_URL = "https://api.lyrics.ovh/v1/{artist}/{title}"
 
-
 def get_lyrics(title: str, artist: str, timeout: int = 10) -> Optional[str]:
     """Return song lyrics using the lyrics.ovh API.
 
@@ -33,12 +32,12 @@ def get_lyrics(title: str, artist: str, timeout: int = 10) -> Optional[str]:
                 data = json.loads(resp.read().decode())
                 return data.get("lyrics")
     except (urllib.error.URLError, TimeoutError):
-
         return None
     return None
 
 
-def _get_lyrics_lyricscom(title: str, artist: str, timeout: int = 10) -> Optional[str]:
+def fetch_lyrics_lyricscom(title: str, artist: str, timeout: int = 10) -> Optional[str]:
+
     """Fetch lyrics by scraping lyrics.com as a fallback."""
     query = urllib.parse.quote(f"{title} {artist}")
     search_url = f"https://www.lyrics.com/lyrics/{query}"
@@ -71,10 +70,13 @@ def _get_lyrics_lyricscom(title: str, artist: str, timeout: int = 10) -> Optiona
 
 def get_lyrics(title: str, artist: str, timeout: int = 10) -> Optional[str]:
     """Return song lyrics from available sources."""
-    lyrics = _get_lyrics_ovh(title, artist, timeout)
+
+    lyrics = fetch_lyrics_ovh(title, artist, timeout)
     if lyrics:
         return lyrics
-    return _get_lyrics_lyricscom(title, artist, timeout)
+    return fetch_lyrics_lyricscom(title, artist, timeout)
+
+
 
 def clean_lyrics(text: str) -> str:
     """Return lyrics stripped of surrounding whitespace and extra blank lines."""

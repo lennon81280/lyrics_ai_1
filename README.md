@@ -1,10 +1,8 @@
 # Lyrics Fetcher
 
-
 Simple script to retrieve song lyrics. It first tries the
 [lyrics.ovh](https://lyrics.ovh) API and falls back to scraping
 [lyrics.com](https://www.lyrics.com) if necessary.
-
 
 ## Usage
 
