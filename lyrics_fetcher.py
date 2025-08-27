@@ -11,8 +11,17 @@ import urllib.parse
 API_URL = "https://api.lyrics.ovh/v1/{artist}/{title}"
 
 
-def _get_lyrics_ovh(title: str, artist: str, timeout: int = 10) -> Optional[str]:
-    """Try fetching lyrics from the lyrics.ovh API."""
+def get_lyrics(title: str, artist: str, timeout: int = 10) -> Optional[str]:
+    """Return song lyrics using the lyrics.ovh API.
+
+    Args:
+        title: Title of the song.
+        artist: Performing artist.
+        timeout: Request timeout in seconds.
+    Returns:
+        Lyrics text if found, otherwise None.
+    """
+
     url = API_URL.format(
         artist=urllib.parse.quote(artist),
         title=urllib.parse.quote(title),
@@ -24,6 +33,7 @@ def _get_lyrics_ovh(title: str, artist: str, timeout: int = 10) -> Optional[str]
                 data = json.loads(resp.read().decode())
                 return data.get("lyrics")
     except (urllib.error.URLError, TimeoutError):
+
         return None
     return None
 
@@ -65,7 +75,6 @@ def get_lyrics(title: str, artist: str, timeout: int = 10) -> Optional[str]:
     if lyrics:
         return lyrics
     return _get_lyrics_lyricscom(title, artist, timeout)
-
 
 def clean_lyrics(text: str) -> str:
     """Return lyrics stripped of surrounding whitespace and extra blank lines."""
