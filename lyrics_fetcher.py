@@ -28,16 +28,18 @@ def get_lyrics(title: str, artist: str, timeout: int = 10) -> Optional[str]:
     req = urllib.request.Request(url)
     try:
         with urllib.request.urlopen(req, timeout=timeout) as resp:
-            if resp.status == 200:
-                data = json.loads(resp.read().decode())
-                return data.get("lyrics")
-    except (urllib.error.URLError, TimeoutError):
+
+            if resp.status != 200:
+                return None
+            data = json.loads(resp.read().decode())
+            return data.get("lyrics")
+    except (urllib.error.URLError, TimeoutError, json.JSONDecodeError):
+
         return None
     return None
 
 
 def fetch_lyrics_lyricscom(title: str, artist: str, timeout: int = 10) -> Optional[str]:
-
     """Fetch lyrics by scraping lyrics.com as a fallback."""
     query = urllib.parse.quote(f"{title} {artist}")
     search_url = f"https://www.lyrics.com/lyrics/{query}"
@@ -70,13 +72,10 @@ def fetch_lyrics_lyricscom(title: str, artist: str, timeout: int = 10) -> Option
 
 def get_lyrics(title: str, artist: str, timeout: int = 10) -> Optional[str]:
     """Return song lyrics from available sources."""
-
     lyrics = fetch_lyrics_ovh(title, artist, timeout)
     if lyrics:
         return lyrics
     return fetch_lyrics_lyricscom(title, artist, timeout)
-
-
 
 def clean_lyrics(text: str) -> str:
     """Return lyrics stripped of surrounding whitespace and extra blank lines."""
