@@ -10,9 +10,17 @@ import urllib.parse
 
 API_URL = "https://api.lyrics.ovh/v1/{artist}/{title}"
 
+def get_lyrics(title: str, artist: str, timeout: int = 10) -> Optional[str]:
+    """Return song lyrics using the lyrics.ovh API.
 
-def fetch_lyrics_ovh(title: str, artist: str, timeout: int = 10) -> Optional[str]:
-    """Try fetching lyrics from the lyrics.ovh API."""
+    Args:
+        title: Title of the song.
+        artist: Performing artist.
+        timeout: Request timeout in seconds.
+    Returns:
+        Lyrics text if found, otherwise None.
+    """
+
     url = API_URL.format(
         artist=urllib.parse.quote(artist),
         title=urllib.parse.quote(title),
@@ -29,6 +37,7 @@ def fetch_lyrics_ovh(title: str, artist: str, timeout: int = 10) -> Optional[str
 
 
 def fetch_lyrics_lyricscom(title: str, artist: str, timeout: int = 10) -> Optional[str]:
+
     """Fetch lyrics by scraping lyrics.com as a fallback."""
     query = urllib.parse.quote(f"{title} {artist}")
     search_url = f"https://www.lyrics.com/lyrics/{query}"
@@ -61,10 +70,12 @@ def fetch_lyrics_lyricscom(title: str, artist: str, timeout: int = 10) -> Option
 
 def get_lyrics(title: str, artist: str, timeout: int = 10) -> Optional[str]:
     """Return song lyrics from available sources."""
+
     lyrics = fetch_lyrics_ovh(title, artist, timeout)
     if lyrics:
         return lyrics
     return fetch_lyrics_lyricscom(title, artist, timeout)
+
 
 
 def clean_lyrics(text: str) -> str:
